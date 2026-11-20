@@ -1,0 +1,7 @@
+.DS_Store
+.build/
+/dropbox-usage/build/
+/UsageBar/*.app/
+/dropbox-usage/conv.md
+/guideline.png
+/openusage/
