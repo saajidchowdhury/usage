@@ -304,28 +304,22 @@ final class UsageBar: NSObject, NSApplicationDelegate {
     static func image(_ rows: [[(String, String)]], icons: [NSImage?]) -> NSImage {
         let font = NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .semibold)
         let height = min(25, NSStatusBar.system.thickness)
+        let extraLogoSpacing: CGFloat = 2
         let extraCountdownSpacing: CGFloat = 3
-        let width = 201 + 2*extraCountdownSpacing
+        let providerWidth = 101 + extraLogoSpacing + extraCountdownSpacing
+        let width = 2*providerWidth - 1
         let image = NSImage(size: NSSize(width: width, height: height), flipped: true) { _ in
             for (index, row) in rows.enumerated() {
-                let x = CGFloat(index)*(101 + extraCountdownSpacing)
-                let resetX = x + 55 + extraCountdownSpacing
+                let x = CGFloat(index)*providerWidth
+                let percentRightX = x + 50 + extraLogoSpacing
+                let resetX = percentRightX + 5 + extraCountdownSpacing
                 icons[index]?.draw(in: NSRect(x: x - 1, y: (height - 23)/2, width: 23, height: 23))
                 for (line, (percent, reset)) in row.enumerated() {
                     let attributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.black]
                     let y = (height - 22)/2 + CGFloat(line)*11
-                    percent.draw(at: NSPoint(x: x + 50 - percent.size(withAttributes: attributes).width, y: y),
+                    percent.draw(at: NSPoint(x: percentRightX - percent.size(withAttributes: attributes).width, y: y),
                                  withAttributes: attributes)
-                    if index == 1, reset != "–" {
-                        for (unitX, field) in zip([resetX + 12, resetX + 34], reset.split(separator: " ")) {
-                            let digits = String(field.dropLast())
-                            let digitWidth = digits.size(withAttributes: attributes).width
-                            digits.draw(at: NSPoint(x: unitX - digitWidth, y: y), withAttributes: attributes)
-                            String(field.suffix(1)).draw(at: NSPoint(x: unitX, y: y), withAttributes: attributes)
-                        }
-                    } else {
-                        reset.draw(at: NSPoint(x: resetX, y: y), withAttributes: attributes)
-                    }
+                    reset.draw(at: NSPoint(x: resetX, y: y), withAttributes: attributes)
                 }
             }
             return true
