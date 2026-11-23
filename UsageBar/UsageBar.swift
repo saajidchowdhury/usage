@@ -307,10 +307,12 @@ final class UsageBar: NSObject, NSApplicationDelegate {
         let extraLogoSpacing: CGFloat = 2
         let extraCountdownSpacing: CGFloat = 3
         let providerWidth = 101 + extraLogoSpacing + extraCountdownSpacing
-        let width = 2*providerWidth - 1
+        // Match the visible percent-to-countdown gap when Claude shows 11h 31m.
+        let providerSpacing: CGFloat = 6.5
+        let width = 2*providerWidth + providerSpacing - 1
         let image = NSImage(size: NSSize(width: width, height: height), flipped: true) { _ in
             for (index, row) in rows.enumerated() {
-                let x = CGFloat(index)*providerWidth
+                let x = CGFloat(index)*(providerWidth + providerSpacing)
                 let percentRightX = x + 50 + extraLogoSpacing
                 let resetX = percentRightX + 5 + extraCountdownSpacing
                 icons[index]?.draw(in: NSRect(x: x - 1, y: (height - 23)/2, width: 23, height: 23))
